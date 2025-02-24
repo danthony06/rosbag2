@@ -137,6 +137,15 @@ public:
   // replayed messages may not be correctly ordered. A possible solution could be to increase the
   // read_ahead_queue_size value to buffer (and order) more messages.
   MessageOrder message_order = MessageOrder::RECEIVED_TIMESTAMP;
+
+  /// The progress bar maximum update rate in times per second (Hz).
+  /// If update rate equal 0 the progress bar will be disabled and will not output any information.
+  /// If update rate less than 0 the progress bar will be updated for every update(..) and
+  /// update_with_limited_rate(..) calls.
+  int32_t progress_bar_update_rate = 0;
+
+  // Number of separation lines to print in between the playback output and the progress bar.
+  uint32_t progress_bar_separation_lines = 3;
 };
 
 }  // namespace rosbag2_transport
