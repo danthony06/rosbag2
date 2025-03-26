@@ -270,6 +270,15 @@ if(BUILD_TESTING)
 
   function(test_serialization_converter_for_rmw_implementation)
     set(rmw_implementation_env_var RMW_IMPLEMENTATION=${rmw_implementation})
+
+    # If the rmw_implementation is rmw_zenoh_cpp, run the tests with multicast discovery enabled.
+    # Note: This is a temporary change that will be reverted before we branch into Kilted.
+    if(rmw_implementation STREQUAL "rmw_zenoh_cpp")
+      list(APPEND rmw_implementation_env_var
+        ZENOH_CONFIG_OVERRIDE=scouting/multicast/enabled=true
+      )
+    endif()
+
     ament_add_gmock_test(test_serialization_converter
       TEST_NAME test_serialization_converter${target_suffix}
       ENV ${rmw_implementation_env_var}
