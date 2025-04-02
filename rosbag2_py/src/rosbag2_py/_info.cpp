@@ -19,7 +19,9 @@
 
 #include "info_sorting_method.hpp"
 #include "format_bag_metadata.hpp"
+#include "format_action_info.hpp"
 #include "format_service_info.hpp"
+#include "rosbag2_cpp/action_utils.hpp"
 #include "rosbag2_cpp/info.hpp"
 #include "rosbag2_cpp/service_utils.hpp"
 #include "rosbag2_storage/bag_metadata.hpp"
@@ -64,7 +66,10 @@ public:
       const auto & topic_info = metadata_info.topics_with_message_count[idx];
       if (!rosbag2_cpp::is_service_event_topic(
           topic_info.topic_metadata.name,
-          topic_info.topic_metadata.type))
+          topic_info.topic_metadata.type) &&
+        !rosbag2_cpp::is_topic_belong_to_action(
+              topic_info.topic_metadata.name,
+              topic_info.topic_metadata.type))
       {
         std::cout << topic_info.topic_metadata.name << std::endl;
       }
@@ -77,16 +82,14 @@ public:
     const std::string & sorting_method)
   {
     std::vector<std::shared_ptr<rosbag2_cpp::rosbag2_service_info_t>> all_services_info;
+    std::vector<std::shared_ptr<rosbag2_cpp::rosbag2_action_info_t>> all_actions_info;
+
     for (auto & file_info : metadata_info.files) {
-      auto services_info = info_->read_service_info(
-        uri + "/" + file_info.path,
-        metadata_info.storage_identifier);
-      if (!services_info.empty()) {
-        all_services_info.insert(
-          all_services_info.end(),
-          services_info.begin(),
-          services_info.end());
-      }
+      auto [service_info, action_info] = info_->read_service_and_action_info(
+        uri + "/" + file_info.path, metadata_info.storage_identifier);
+
+      all_services_info.insert(all_services_info.end(), service_info.begin(), service_info.end());
+      all_actions_info.insert(all_actions_info.end(), action_info.begin(), action_info.end());
     }
 
     std::unordered_map<std::string, uint64_t> messages_size = {};
@@ -100,10 +103,12 @@ public:
     }
 
     rosbag2_py::InfoSortingMethod sort_method = info_sorting_method_from_string(sorting_method);
-    // Output formatted metadata and service info
+    // Output formatted metadata, service info and action info
     std::cout << format_bag_meta_data(metadata_info, messages_size, true, true, sort_method);
     std::cout <<
       format_service_info(all_services_info, messages_size, true, sort_method) << std::endl;
+    std::cout <<
+      format_action_info(all_actions_info, messages_size, true, sort_method) << std::endl;
   }
 
   std::unordered_set<std::string> get_sorting_methods()
