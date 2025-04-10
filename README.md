@@ -167,6 +167,8 @@ Options:
   Space-delimited list of topics to play.
 * `--services`:
   Space-delimited list of services to play.
+* `--actions`:
+  Space-delimited list of actions to play.
 * `-e,--regex`:
   Play only topics and services matches with regular expression.
 * `-x,--exclude-regex`:
@@ -175,6 +177,8 @@ Options:
   Space-delimited list of topics not to play.
 * `--exclude-services`:
   Space-delimited list of services not to play.
+* `--exclude-actions`:
+  Space-delimited list of actions not to play.
 * `--message-order {received,sent}`:
   The reference to use for bag message chronological ordering.
   Choices: reception timestamp (`received`), publication timestamp (`sent`).
@@ -188,6 +192,15 @@ Options:
   It prevents mixing external log messages with the progress bar string. Default to 2.
 
 For more options, run with `--help`.
+
+#### Playback action messages as action client
+
+If you want Rosbag2 to replay recorded action messages in the role of an action client, you need to specify the --send-actions-as-client parameter.
+```
+$ ros2 bag play --send-actions-as-client <bag>
+```
+Rosbag2 will send recorded goal request, cancel request and result request to action server.  
+For more information, please refer to https://github.com/ros2/rosbag2/blob/rolling/docs/design/rosbag2_record_replay_action.md.
 
 #### Controlling playback via services
 
@@ -282,12 +295,15 @@ output_bags:
   topic_types: []
   all_services: false
   services: []
+  all_actions: false
+  actions: []
   rmw_serialization_format: ""  # defaults to using the format of the input topic
   regex: ""
   exclude_regex: ""
   exclude_topics: []
   exclude_topic_types: []
   exclude_services: []
+  exclude_actions: []
   compression_mode: ""
   compression_format: ""
   compression_queue_size: 1
