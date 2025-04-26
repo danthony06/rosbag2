@@ -2,6 +2,9 @@
 Changelog for package rosbag2_test_msgdefs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.33.0 (2025-04-25)
+-------------------
+
 0.32.0 (2025-04-18)
 -------------------
 * Add support for finding action types message definitions in the `LocalMessageDefinitionSource`
