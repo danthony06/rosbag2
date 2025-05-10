@@ -39,11 +39,9 @@ macro(build_mcap_vendor)
   )
   fetchcontent_makeavailable(mcap)
 
-  message(WARN "DJA: ${CMAKE_CURRENT_SOURCE_DIR}")
   file(GLOB PATCHES
     "${CMAKE_CURRENT_SOURCE_DIR}/patches/*.patch"
   )
-  message(WARN "DJA: ${PATCHES}")
 
   foreach(PATCH ${PATCHES})
     execute_process(COMMAND git apply --whitespace=nowarn -p1 ${PATCH})
