@@ -1,0 +1,10 @@
+--- /tmp/types.hpp	2025-05-10 17:36:18.117912264 -0500
++++ build/mcap_vendor/_deps/mcap-src/cpp/mcap/include/mcap/types.hpp	2025-05-10 17:35:39.688314498 -0500
+@@ -3,6 +3,7 @@
+ #include "errors.hpp"
+ #include "visibility.hpp"
+ #include <cstddef>
++#include <cstdint>
+ #include <functional>
+ #include <limits>
+ #include <memory>
